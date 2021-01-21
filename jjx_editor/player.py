@@ -78,7 +78,7 @@ class Player:
     @classmethod
     def from_file(cls, fp: Union[str, Path]) -> Player:
         '''Returns a player object from a binary player file'''
-        def _get_byte(_int: int):
+        def _get_byte(_int: Union[int, bytes]):
             '''Tries to unpack and return the int value'''
             try:
                 return struct.unpack('B', _int)[0]
