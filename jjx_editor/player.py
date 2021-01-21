@@ -9,6 +9,7 @@
 from __future__ import annotations
 from pathlib import Path
 from enum import Enum
+import struct
 from typing import Union
 
 
@@ -53,22 +54,22 @@ class Player:
 
     # -Constructor
     def __init__(
-        self, name: str, gender: Gender, skin: int,
+        self, name: str, gender: Gender, skin_tone: int,
         hair_style: int, hair_color: HairColor,
         difficulty: Difficulty = Difficulty.Normal,
-        permadeath: bool = False, simple_craft: bool = False,
+        hardcore: bool = False, simple_craft: bool = False,
         perpetual_time: bool = False
     ) -> Player:
         ''''''
         # -Character
         self.name = name
         self.gender = gender
-        self.skin = skin
+        self.skin_tone = skin_tone
         self.hair_style = hair_style
         self.hair_color = hair_color
         # -Gameplay options
         self.difficulty = difficulty
-        self.permadeath = permadeath
+        self.hardcore = hardcore
         self.simple_craft = simple_craft
         self.perpetual_time = perpetual_time
         # -Inventory
@@ -77,4 +78,38 @@ class Player:
     @classmethod
     def from_file(cls, fp: Union[str, Path]) -> Player:
         '''Returns a player object from a binary player file'''
-        pass
+        def _get_byte(_int: int):
+            '''Tries to unpack and return the int value'''
+            try:
+                return struct.unpack('B', _int)[0]
+            except TypeError:
+                return _int
+
+        with open(fp, 'rb') as f:
+            # -Name [0x58 : 0x66 (0x67 == null terminator)]
+            name = (f.read(0x68)[-16:]).decode('utf-8')
+            # -Gameplay options [0x71]
+            # -hardcore/simple craft/perpetual time
+            t = _get_byte(f.read(9)[-1])
+            hard = bool(t & 1)
+            crft = bool(t & 2)
+            time = bool(t & 4)
+            # -Character: hair color [0x74]
+            t = _get_byte(f.read(4)[-1])
+            for c in HairColor:
+                if t == c.value:
+                    hclr = c
+            # -Character: gender/skin tone/hair style [0x75]
+            t = _get_byte(f.read(1))
+            tu = (t & 0xF0) >> 4
+            gndr = Gender.Female if tu % 2 else Gender.Male
+            tone = tu >> 1
+            hair = t & 0x0F
+            # -Gameplay options: difficulty [0x78]
+            t = _get_byte(f.read(3)[-1])
+            for d in Difficulty:
+                if t == d.value:
+                    diff = d
+            # -Inventory [0x7A : 0x0415]
+        # -Return new player object
+        return cls(name, gndr, tone, hair, hclr, diff, hard, crft, time)
