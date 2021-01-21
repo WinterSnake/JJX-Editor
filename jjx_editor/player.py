@@ -7,7 +7,9 @@
 
 ## Imports
 from __future__ import annotations
+from pathlib import Path
 from enum import Enum
+from typing import Union
 
 
 ## Classes
@@ -70,3 +72,9 @@ class Player:
         self.simple_craft = simple_craft
         self.perpetual_time = perpetual_time
         # -Inventory
+
+    # -Class Methods
+    @classmethod
+    def from_file(cls, fp: Union[str, Path]) -> Player:
+        '''Returns a player object from a binary player file'''
+        pass
