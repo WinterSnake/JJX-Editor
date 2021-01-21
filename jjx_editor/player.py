@@ -62,16 +62,16 @@ class Player:
     ) -> Player:
         ''''''
         # -Character
-        self.name = name
-        self.gender = gender
-        self.skin_tone = skin_tone
-        self.hair_style = hair_style
-        self.hair_color = hair_color
+        self.name: str = name
+        self.gender: Gender = gender
+        self.skin_tone: int = skin_tone
+        self.hair_style: int = hair_style
+        self.hair_color: HairColor = hair_color
         # -Gameplay options
-        self.difficulty = difficulty
-        self.hardcore = hardcore
-        self.simple_craft = simple_craft
-        self.perpetual_time = perpetual_time
+        self.difficulty: Difficulty = difficulty
+        self.hardcore: bool = hardcore
+        self.simple_craft: bool = simple_craft
+        self.perpetual_time: bool = perpetual_time
         # -Inventory
 
     # -Class Methods
