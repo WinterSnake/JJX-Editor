@@ -1,0 +1,11 @@
+# Python: Cache
+__pycache__
+
+# Python: Build System Libs
+.libs
+
+# Editor: Sublime Text 3
+*.sublime-*
+
+# JJXE: Temp Files
+temp
