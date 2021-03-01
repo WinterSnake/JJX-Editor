@@ -23,6 +23,12 @@ class Item:
         self.amount: int = amount
         self.durability: int = durability
 
+    # -Class Methods
+    @classmethod
+    def decompress(cls, _str: bytes) -> Container:
+        ''''''
+        pass
+
 
 class Container:
     """"""
@@ -37,3 +43,9 @@ class Container:
         else:
             self.items = [*args]
         self.size = len(self.items)
+
+    # -Class Methods
+    @classmethod
+    def decompress(cls, _str: bytes) -> Container:
+        ''''''
+        pass
